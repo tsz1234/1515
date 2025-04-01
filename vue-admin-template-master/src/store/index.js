@@ -30,7 +30,7 @@ const store = new Vuex.Store({
             {
                 type: 'ios-grid',
                 name: 't1',
-                text: '表单',
+                text: '预测单价',
                 // hidden 属性 隐藏此菜单 可以通过在地址栏上输入对应的 URL 来显示页面
                 // hidden: true,
             },

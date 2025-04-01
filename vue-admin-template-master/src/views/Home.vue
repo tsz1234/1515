@@ -181,6 +181,8 @@ export default {
                 雨花区: [113.016337, 28.109937],
                 望城区: [112.819549, 28.347458],
                 长沙县: [113.080098, 28.237888],
+                浏阳市: [113.632705, 28.156057],
+                宁乡市: [112.551892, 28.247177]
             }
             let convertData = function (data) {
                 let res = []
@@ -234,13 +236,19 @@ export default {
                         },
                     },
                 },
+              tooltip: {
+            trigger: 'item',
+            formatter: function (params) {
+                return params.name + ': ' + params.value[2];
+            },
+        },
                 series: [{
                     name: '二手房数据',
                     type: 'effectScatter',
                     coordinateSystem: 'geo',
                     data: convertData(data),
                     symbolSize(val) {
-                        return val[2] / 10
+                        return val[2] / 40
                     },
                     showEffectOn: 'render',
                     rippleEffect: {

@@ -5,7 +5,6 @@
                 <Icon type="ios-film-outline"></Icon>
                 区域词云图
             </template>
-            <!-- 新增父级容器并添加居中样式 -->
             <div class="image-container">
                 <img
                     src="../../src/assets/imgs/gas.jpg"
@@ -25,10 +24,10 @@ export default {}
 /* Flexbox方案 */
 .image-container {
     display: flex;
-    justify-content: center;  /* 水平居中 */
-    align-items: center;      /* 垂直居中 */
-    min-height: 300px;        /* 设置最小高度防止折叠 */
-    width: 50%;             /* 继承父容器宽度 */
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    width: 50%;
 }
 
 /* Grid布局替代方案 */
@@ -39,8 +38,8 @@ export default {}
 } */
 
 .centered-image {
-    max-width: 100%;         /* 防止图片溢出容器 */
-    height: auto;            /* 保持图片比例 */
-    object-fit: contain;     /* 完整显示图片内容 */
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
 }
 </style>
