@@ -1,7 +1,7 @@
 <template>
     <div class="login-vue" :style="bg">
         <div class="container">
-            <p class="title">欢迎回来</p>
+            <p class="title">WELCOME</p>
             <div class="input-c">
                 <Input prefix="ios-contact" v-model="account" placeholder="用户名" clearable @on-blur="verifyAccount" />
                 <p class="error">{{accountError}}</p>
@@ -30,7 +30,6 @@ export default {
             pwdError: '',
             isShowLoading: false,
             bg: {},
-            redirect: ''
         };
     },
     created() {
@@ -41,8 +40,8 @@ export default {
             handler(route) {
                 this.redirect = route.query && route.query.redirect;
             },
-            immediate: true
-        }
+            immediate: true,
+        },
     },
     methods: {
         verifyAccount() {
@@ -60,10 +59,13 @@ export default {
             }
         },
         register() {
-            this.$router.push('/register');
+            // 跳转到注册页面
+            console.log('Register method is called');
+            this.$router.push({ name: 'register' });
         },
         forgetPwd() {
-            // 可以添加忘记密码的逻辑
+            // 跳转到忘记密码页面
+            this.$router.push('/forget-password');
         },
         async submit() {
             this.verifyAccount();
@@ -73,26 +75,28 @@ export default {
             }
             this.isShowLoading = true;
             try {
-                const response = await request.post('/api/login', {
+                const res = await request.post('http://localhost:8000/myApp/login/', {
                     username: this.account,
-                    password: this.pwd
+                    password: this.pwd,
                 });
-                if (response.code === 0) {
-                    localStorage.setItem('userImg', response.data.userImg);
-                    localStorage.setItem('userName', response.data.userName);
-                    localStorage.setItem('token', response.data.token);
+                if (res.code === 0) {
+                    // 登陆成功 设置用户信息
+                    localStorage.setItem('userImg', res.data.userImg);
+                    localStorage.setItem('userName', res.data.userName);
+                    // 登陆成功 假设这里是后台返回的 token
+                    localStorage.setItem('token', res.data.token);
                     this.$router.push({ path: this.redirect || '/' });
                 } else {
-                    this.accountError = response.msg;
+                    this.accountError = res.msg;
                 }
             } catch (error) {
                 console.error(error);
-                this.accountError = '登录失败，请稍后再试';
+                this.accountError = '登录失败，请稍后重试';
             } finally {
                 this.isShowLoading = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
@@ -121,18 +125,22 @@ export default {
 }
 
 .login-vue ::-webkit-input-placeholder {
+    /* WebKit, Blink, Edge */
     color: rgba(255, 255, 255, .8);
 }
 
 .login-vue :-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
     color: rgba(255, 255, 255, .8);
 }
 
 .login-vue ::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
     color: rgba(255, 255, 255, .8);
 }
 
 .login-vue :-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
     color: rgba(255, 255, 255, .8);
 }
 

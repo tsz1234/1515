@@ -89,10 +89,6 @@
                     </div>
                     <div class="h-right">
                         <!-- 消息 -->
-                        <div class="notice-c" @click="info" title="查看新消息">
-                            <div :class="{newMsg: hasNewMsg}"></div>
-                            <Icon type="ios-notifications-outline" />
-                        </div>
                         <!-- 用户头像 -->
                         <div class="user-img-c">
                             <img :src="userImg">
@@ -106,6 +102,8 @@
                             </div>
                             <DropdownMenu slot="list">
                                 <!-- name标识符 -->
+                                <DropdownItem name="1">修改密码</DropdownItem>
+                                <DropdownItem name="2">基本资料</DropdownItem>
                                 <DropdownItem divided  name="3">退出登陆</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
@@ -335,6 +333,12 @@ export default {
         // 用户操作
         userOperate(name) {
             switch (name) {
+              case '1':
+                    this.$router.push({ name: 'password' });
+                    break;
+                case '2':
+                    this.$router.push({ name: 'userinfo' });
+                    break;
                 case '3':
                     resetTokenAndClearUser()
                     this.$router.push({ name: 'login' })

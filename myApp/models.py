@@ -21,8 +21,8 @@ class Products(models.Model):
 
 class User(models.Model):
     id = models.AutoField('id', primary_key=True)
-    username = models.CharField('用户名', max_length=50, default='')
-    password = models.CharField('密码', max_length=50, default='')
+    username = models.CharField('用户名', max_length=50000, default='')
+    password = models.CharField('密码', max_length=5000000, default='')
     createTime = models.DateTimeField('创建时间', auto_now_add=True)
 
     class Meta:

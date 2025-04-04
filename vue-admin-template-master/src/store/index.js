@@ -27,6 +27,7 @@ const store = new Vuex.Store({
                 url: 'https://www.lianjia.com',
                 isExternal: true, // 外链 跳到一个外部的 URL 页面
             },
+
             {
                 type: 'ios-grid',
                 name: 't1',
@@ -51,6 +52,22 @@ const store = new Vuex.Store({
                         name: 'c2', // 外链 跳到一个外部的 URL 页面
                     },
                 ],
+            },
+            {
+                text: '用户中心',
+                type: 'ios-paper',
+                children: [
+                    {
+                        type: 'md-lock',
+                        name: 'password',
+                        text: '修改密码',
+                    },
+                    {
+                        type: 'md-person',
+                        name: 'userinfo',
+                        text: '基本资料',
+                    }
+                ]
             },
         ],
     },

@@ -31,7 +31,7 @@ router.beforeEach(async (to, from, next) => {
         }
     } else {
         hasMenus = false
-        if (to.path === '/login') {
+        if (to.path === '/login' || to.path === '/register') {
             next()
         } else {
             next(`/login?redirect=${to.path}`)

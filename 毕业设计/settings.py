@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ORIGINS = 'http://localhost:8081'
+CORS_ALLOW_ORIGINS = 'http://localhost:8081/'
 CORS_ALLOW_HEADERS =('*')
 CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = '毕业设计.urls'

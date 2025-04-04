@@ -1,15 +1,16 @@
 import Vue from 'vue'
 import axios from 'axios'
-import ViewUI from 'view-design'
 import dataV from '@jiaminghi/data-view'
 import * as echarts from 'echarts'
 import $http from '@/api/index.js'
-import App from './App'
 import store from './store'
 import router from './router'
-import 'view-design/dist/styles/iview.css'
-import './permission'
+import App from './App.vue';
+import ViewUI from 'view-design';
+import 'view-design/dist/styles/iview.css';
+import './permission';
 
+// 使用 ViewUI
 Vue.prototype.$echarts=echarts
 Vue.prototype.$http=$http
 Vue.use(dataV)

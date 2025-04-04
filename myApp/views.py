@@ -160,11 +160,12 @@ def get_options(request):
 from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password, check_password
 from myApp.models import User
-
+@csrf_exempt
 def login(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        data = json.loads(request.body.decode('utf-8'))
+        username = data.get('username')
+        password = data.get('password')
         try:
             user = User.objects.get(username=username)
             if check_password(password, user.password):
@@ -186,19 +187,128 @@ def login(request):
                 'code': 1,
                 'msg': '用户不存在'
             })
+from django.contrib.auth.hashers import make_password
+from django.http import JsonResponse
+from .models import User
 
+@csrf_exempt
 def register(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        if User.objects.filter(username=username).exists():
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            username = data.get('username')
+            password = data.get('password')
+            if not username or not password:
+                return JsonResponse({
+                    'code': 1,
+                    'msg': '用户名和密码不能为空'
+                })
+            if User.objects.filter(username=username).exists():
+                return JsonResponse({
+                    'code': 1,
+                    'msg': '用户名已存在'
+                })
+            hashed_password = make_password(password)
+            print(f"Length of hashed password: {len(hashed_password)}")
+            User.objects.create(username=username, password=hashed_password)
+            return JsonResponse({
+                'code': 0,
+                'msg': '注册成功'
+            })
+        except json.JSONDecodeError:
             return JsonResponse({
                 'code': 1,
-                'msg': '用户名已存在'
+                'msg': '请求数据格式错误'
             })
-        hashed_password = make_password(password)
-        User.objects.create(username=username, password=hashed_password)
-        return JsonResponse({
-            'code': 0,
-            'msg': '注册成功'
-        })
+# as415/myApp/views.py
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import check_password, make_password
+import os
+@csrf_exempt
+def updateUserInfo(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        otherInfo = request.POST.get('otherInfo')
+        try:
+            user = User.objects.get(username=username)
+            # 这里可以将 otherInfo 保存到用户的其他字段中
+            return JsonResponse({
+                'code': 0,
+                'msg': '资料保存成功'
+            })
+        except User.DoesNotExist:
+            return JsonResponse({
+                'code': 1,
+                'msg': '用户不存在'
+            })
+@csrf_exempt
+def uploadAvatar(request):
+    if request.method == 'POST':
+        file = request.FILES.get('avatar')
+        if file:
+            # 保存文件到指定目录
+            file_path = os.path.join('uploads', file.name)
+            with open(file_path, 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+            return JsonResponse({
+                'code': 0,
+                'data': {
+                    'avatarUrl': file_path
+                }
+            })
+        else:
+            return JsonResponse({
+                'code': 1,
+                'msg': '未选择文件'
+            })
+
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+def changePassword(request):
+    if request.method == 'POST':
+        # 获取前端传来的旧密码和新密码
+        oldPassword = request.POST.get('oldPassword')
+        newPassword = request.POST.get('newPassword')
+
+        # 输入验证
+        if not oldPassword or not newPassword:
+            return JsonResponse({
+                'code': 2,
+                'msg': '旧密码和新密码不能为空'
+            })
+
+        # 密码强度验证（示例：新密码长度至少为 8 位）
+        if len(newPassword) < 8:
+            return JsonResponse({
+                'code': 3,
+                'msg': '新密码长度至少为 8 位'
+            })
+
+        try:
+            # 假设用户已经登录，可以通过 request.user 获取当前用户
+            user = request.user
+            if check_password(oldPassword, user.password):
+                # 验证旧密码正确，更新新密码
+                user.password = make_password(newPassword)
+                user.save()
+                return JsonResponse({
+                    'code': 0,
+                    'msg': '密码修改成功'
+                })
+            else:
+                # 旧密码错误
+                return JsonResponse({
+                    'code': 1,
+                    'msg': '旧密码错误'
+                })
+        except Exception as e:
+            # 记录异常信息
+            logger.error(f"修改密码时出现错误: {e}")
+            return JsonResponse({
+                'code': 500,
+                'msg': '服务器内部错误，请稍后再试'
+            })
